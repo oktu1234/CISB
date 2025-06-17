@@ -4,7 +4,7 @@ import axios from 'axios';
 export default function ClaimForm() {
   const [form, setForm] = useState({ claimID: '', policyID: '', date: '', payout: '' });
   const [message, setMessage] = useState('');
-  const baseURL = process.env.REACT_APP_API_BASE || 'localhost:3000';
+  const baseURL = process.env.REACT_APP_API_BASE;
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async e => {

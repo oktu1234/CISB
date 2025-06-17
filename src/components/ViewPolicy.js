@@ -5,7 +5,7 @@ export default function ViewPolicy() {
   const [policyID, setPolicyID] = useState('');
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
-  const baseURL = process.env.REACT_APP_API_BASE || 'localhost:3000';
+  const baseURL = process.env.REACT_APP_API_BASE;
 
   const handleSubmit = async e => {
     e.preventDefault();

@@ -1,4 +1,6 @@
 {
+  "proxy": "http://20.2.18.117:3000",
+
   "name": "crop-insurance-ui",
   "version": "0.1.0",
   "private": true,

@@ -4,7 +4,7 @@ import axios from 'axios';
 export default function PolicyForm() {
   const [form, setForm] = useState({ policyID: '', farmerName: '', cropType: '', area: '', sumInsured: '' });
   const [message, setMessage] = useState('');
-  const baseURL = process.env.REACT_APP_API_BASE;
+  const baseURL = 'http://20.2.18.117:3000';
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async e => {

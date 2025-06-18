@@ -4,7 +4,7 @@ import axios from 'axios';
 export default function PolicyForm() {
   const [form, setForm] = useState({ policyID: '', farmerName: '', cropType: '', area: '', sumInsured: '', hash: '', issueDate: '' });
   const [message, setMessage] = useState('');
-  const [qrCodeUrl, setQrCodeUrl] = useState(null);
+  const [qrCodeUrl] = useState(null);
   const baseURL = process.env.REACT_APP_API_BASE;
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 

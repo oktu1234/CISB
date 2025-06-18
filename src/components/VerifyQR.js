@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-export default function ViewClaim() {
+export default function VerifyQR() {
   const [claimID] = useState('');
   const [error] = useState('');
   const baseURL = process.env.REACT_APP_API_BASE;
 
-  const handleSubmit = async e => {
+  const verifyQr = async e => {
     e.preventDefault();
     try {
       const response = await axios.get(`${baseURL}/verify-qr/${claimID}`);

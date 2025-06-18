@@ -15,7 +15,6 @@ const RegisterPolicy = () => {
   });
 
   const [qrUrl, setQrUrl] = useState('');
-   const [response] = useState('');
 
   const handleChange = e => {
     const { name, value } = e.target;

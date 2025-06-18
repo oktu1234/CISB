@@ -74,7 +74,7 @@ const InsuranceDashboard = () => {
 
   return (
     <div style={{ padding: '2rem' }}>
-      <h2>🌾 Crop Insurance Dashboard</h2>
+      <h2>Crop Insurance Dashboard</h2>
 
       <div style={{ marginBottom: '1rem' }}>
         <button onClick={registerPolicy}>Register Policy</button>

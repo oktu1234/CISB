@@ -15,6 +15,7 @@ const RegisterPolicy = () => {
   });
 
   const [qrUrl, setQrUrl] = useState('');
+   const [response] = useState('');
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -24,7 +25,7 @@ const RegisterPolicy = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${API_URL}/policy`, formData);
+      await axios.post(`${API_URL}/policy`, formData);
       alert('Policy registered successfully!');
       // Optionally: fetch QR code
       const qrResponse = await axios.post(`${API_URL}/generate-qr`, formData);

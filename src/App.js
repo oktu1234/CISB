@@ -4,6 +4,7 @@ import PolicyForm from './components/PolicyForm';
 import ClaimForm from './components/ClaimForm';
 import ViewPolicy from './components/ViewPolicy';
 import ViewClaim from './components/ViewClaim';
+import VerifyQR from './components/VerifyQR';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <ClaimForm />
       <ViewPolicy />
       <ViewClaim />
+      <VerifyQR />
     </div>
   );
 }

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 export default function PolicyForm() {
-  const [form, setForm] = useState({ policyID: '', farmerName: '', cropType: '', area: '', sumInsured: '' });
+  const [form, setForm] = useState({ policyID: '', farmerName: '', cropType: '', area: '', sumInsured: '', hash: '', issueDate: '' });
   const [message, setMessage] = useState('');
   const baseURL = process.env.REACT_APP_API_BASE;
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
@@ -21,7 +21,7 @@ export default function PolicyForm() {
     <div>
       <h3>Register New Policy</h3>
       <form onSubmit={handleSubmit}>
-        {['policyID', 'farmerName', 'cropType', 'area', 'sumInsured'].map(field => (
+        {['policyID', 'farmerName', 'cropType', 'area', 'sumInsured','hash', 'issueDate'].map(field => (
           <div key={field}>
             <label>{field}</label>
             <input type="text" name={field} value={form[field]} onChange={handleChange} required />
@@ -30,6 +30,13 @@ export default function PolicyForm() {
         <button type="submit">Submit</button>
       </form>
       {message && <p>{message}</p>}
+      {qrCodeUrl && (
+        <div>
+          <h3>Policy QR Code</h3>
+          <img src={qrCodeUrl} alt="Policy QR Code" style={{ maxWidth: '300px' }} />
+          <a href={qrCodeUrl} download="policyQR.png">Download QR Code</a>
+        </div>
+      )}
     </div>
   );
 }

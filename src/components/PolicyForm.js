@@ -29,15 +29,15 @@ export default function PolicyForm() {
           </div>
         ))}
         <button type="submit">Submit</button>
-      </form>
-      {message && <p>{message}</p>}
-      {qrCodeUrl && (
+        {qrCodeUrl && (
         <div>
           <h3>Policy QR Code</h3>
           <img src={qrCodeUrl} alt="Policy QR Code" style={{ maxWidth: '300px' }} />
           <a href={qrCodeUrl} download="policyQR.png">Download QR Code</a>
         </div>
       )}
+      </form>
+      {message && <p>{message}</p>}
     </div>
   );
 }

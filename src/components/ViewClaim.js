@@ -1,33 +1,51 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Container, TextField, Button, Typography, Card, CardContent } from '@mui/material';
 
-export default function ViewClaim() {
+const ViewClaim = () => {
   const [claimID, setClaimID] = useState('');
-  const [result, setResult] = useState(null);
+  const [claim, setClaim] = useState(null);
   const [error, setError] = useState('');
-  const baseURL = process.env.REACT_APP_API_BASE;
 
-  const handleSubmit = async e => {
-    e.preventDefault();
+  const handleSearch = async () => {
     try {
-      const res = await axios.get(`${baseURL}/claim/${claimID}`);
-      setResult(res.data);
       setError('');
+      setClaim(null);
+      const res = await axios.get(`https://cubalah.eastasia.cloudapp.azure.com/claim/${claimID}`);
+      setClaim(res.data);
     } catch (err) {
-      setError(`❌ Error: ${err.response?.data?.error || err.message}`);
-      setResult(null);
+      setError(err.response?.data?.error || 'Failed to fetch claim');
     }
   };
 
   return (
-    <div>
-      <h3>View Claim</h3>
-      <form onSubmit={handleSubmit}>
-        <input type="text" value={claimID} onChange={e => setClaimID(e.target.value)} placeholder="Enter Claim ID" required />
-        <button type="submit">Search</button>
-      </form>
-      {result && <pre>{JSON.stringify(result, null, 2)}</pre>}
-      {error && <p>{error}</p>}
-    </div>
+    <Container maxWidth="sm" sx={{ mt: 4 }}>
+      <Typography variant="h4" gutterBottom>View Claim</Typography>
+      <TextField
+        fullWidth
+        label="Claim ID"
+        variant="outlined"
+        value={claimID}
+        onChange={(e) => setClaimID(e.target.value)}
+        sx={{ mb: 2 }}
+      />
+      <Button variant="contained" onClick={handleSearch}>Search</Button>
+
+      {error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}
+
+      {claim && (
+        <Card sx={{ mt: 3 }}>
+          <CardContent>
+            <Typography variant="h6">Claim Details</Typography>
+            <Typography><strong>Claim ID:</strong> {claim.claimID}</Typography>
+            <Typography><strong>Policy ID:</strong> {claim.policyID}</Typography>
+            <Typography><strong>Date:</strong> {claim.date}</Typography>
+            <Typography><strong>Payout:</strong> {claim.payout}</Typography>
+          </CardContent>
+        </Card>
+      )}
+    </Container>
   );
-}
+};
+
+export default ViewClaim;

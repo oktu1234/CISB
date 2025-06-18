@@ -1,35 +1,34 @@
+// --- components/SubmitClaim.js ---
 import React, { useState } from 'react';
+import { TextField, Button, Box, Typography } from '@mui/material';
 import axios from 'axios';
 
-export default function ClaimForm() {
+const ClaimForm = () => {
   const [form, setForm] = useState({ claimID: '', policyID: '', date: '', payout: '' });
-  const [message, setMessage] = useState('');
-  const baseURL = process.env.REACT_APP_API_BASE;
-  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = async e => {
-    e.preventDefault();
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async () => {
     try {
-      await axios.post(`${baseURL}/claim`, form);
-      setMessage('✅ Claim submitted successfully');
+      await axios.post('https://cubalah.eastasia.cloudapp.azure.com/claim', form);
+      alert('Claim submitted successfully');
     } catch (err) {
-      setMessage(`❌ Error: ${err.response?.data?.error || err.message}`);
+      alert('Error submitting claim');
     }
   };
 
   return (
-    <div>
-      <h3>Submit a Claim</h3>
-      <form onSubmit={handleSubmit}>
-        {['claimID', 'policyID', 'date', 'payout'].map(field => (
-          <div key={field}>
-            <label>{field}</label>
-            <input type="text" name={field} value={form[field]} onChange={handleChange} required />
-          </div>
-        ))}
-        <button type="submit">Submit</button>
-      </form>
-      {message && <p>{message}</p>}
-    </div>
+    <Box>
+      <Typography variant="h5">Submit Claim</Typography>
+      <TextField fullWidth margin="normal" name="claimID" label="Claim ID" onChange={handleChange} />
+      <TextField fullWidth margin="normal" name="policyID" label="Policy ID" onChange={handleChange} />
+      <TextField fullWidth margin="normal" name="date" label="Date" type="date" InputLabelProps={{ shrink: true }} onChange={handleChange} />
+      <TextField fullWidth margin="normal" name="payout" label="Payout" onChange={handleChange} />
+      <Button variant="contained" onClick={handleSubmit}>Submit</Button>
+    </Box>
   );
-}
+};
+
+export default ClaimForm;

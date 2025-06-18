@@ -1,68 +1,55 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Container, TextField, Button, Typography, Card, CardContent } from '@mui/material';
 
-export default function ViewPolicy() {
+const ViewPolicy = () => {
   const [policyID, setPolicyID] = useState('');
-  const [result, setResult] = useState(null);
+  const [policy, setPolicy] = useState(null);
   const [error, setError] = useState('');
-  const [qrURL, setQrURL] = useState('');
-  const baseURL = process.env.REACT_APP_API_BASE;
 
-  const handleSubmit = async e => {
-    e.preventDefault();
+  const handleSearch = async () => {
     try {
-      const res = await axios.get(`${baseURL}/policy/${policyID}`);
-      setResult(res.data);
       setError('');
+      setPolicy(null);
+      const res = await axios.get(`https://cubalah.eastasia.cloudapp.azure.com/policy/${policyID}`);
+      setPolicy(res.data);
     } catch (err) {
-      setError(`❌ Error: ${err.response?.data?.error || err.message}`);
-      setResult(null);
+      setError(err.response?.data?.error || 'Failed to fetch policy');
     }
   };
 
-  const fetchQRCode = async () => {
-  try {
-    const qrRes = await axios.get(`${baseURL}/qrcode/${policyID}`);
-    setQrURL(qrRes.data.url);
-  } catch (err) {
-    setError(`❌ QR Error: ${err.response?.data?.error || err.message}`);
-  }
+  return (
+    <Container maxWidth="sm" sx={{ mt: 4 }}>
+      <Typography variant="h4" gutterBottom>View Policy</Typography>
+      <TextField
+        fullWidth
+        label="Policy ID"
+        variant="outlined"
+        value={policyID}
+        onChange={(e) => setPolicyID(e.target.value)}
+        sx={{ mb: 2 }}
+      />
+      <Button variant="contained" onClick={handleSearch}>Search</Button>
+
+      {error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}
+
+      {policy && (
+        <Card sx={{ mt: 3 }}>
+          <CardContent>
+            <Typography variant="h6">Policy Details</Typography>
+            <Typography><strong>Policy ID:</strong> {policy.policyID}</Typography>
+            <Typography><strong>Farmer Name:</strong> {policy.farmerName}</Typography>
+            <Typography><strong>Crop Type:</strong> {policy.cropType}</Typography>
+            <Typography><strong>Area:</strong> {policy.area}</Typography>
+            <Typography><strong>Sum Insured:</strong> {policy.sumInsured}</Typography>
+            <Typography><strong>Active:</strong> {policy.active ? 'Yes' : 'No'}</Typography>
+            <Typography><strong>Hash:</strong> {policy.hash}</Typography>
+            <Typography><strong>Issue Date:</strong> {policy.issueDate}</Typography>
+          </CardContent>
+        </Card>
+      )}
+    </Container>
+  );
 };
 
-  return (
-    <div>
-      <h3>View Policy</h3>
-      <form onSubmit={handleSubmit}>
-        <input type="text" value={policyID} onChange={e => setPolicyID(e.target.value)} placeholder="Enter Policy ID" required />
-        <button type="submit">Search</button>
-      </form>
-      {result && <pre>{JSON.stringify(<div style={{ marginTop: '20px' }}>
-          <h3>Policy Details</h3>
-          <pre style={{ background: '#f4f4f4', padding: '10px' }}>
-            {JSON.stringify(result, null, 2)}
-          </pre>
-          <button onClick={fetchQRCode} style={{ padding: '10px 20px', marginTop: '10px' }}>
-            Generate QR Code
-          </button>
-        </div>)}</pre>}
-      {error && <p>{error}</p>}
-      {qrURL && (
-        <div style={{ marginTop: '20px' }}>
-          <h3>QR Code</h3>
-          <a href={qrURL} target="_blank" rel="noopener noreferrer">
-            <img src={qrURL} alt="Policy QR Code" style={{ width: '200px', border: '1px solid #ccc' }} />
-          </a>
-          <p>
-            <a href={qrURL} download={`policy-${policyID}.png`}>
-              Download QR Code
-            </a>
-          </p>
-        </div>
-      )}
-    </div>
-    
-  );
-
-
-}
-
+export default ViewPolicy;

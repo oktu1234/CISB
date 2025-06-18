@@ -1,33 +1,52 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Box, TextField, Button, Typography } from '@mui/material';
 
-export default function VerifyQR() {
-  const [claimID] = useState('');
-  const [error] = useState('');
-  const baseURL = process.env.REACT_APP_API_BASE;
+const VerifyQR = () => {
+  const [policyID, setPolicyID] = useState('');
+  const [result, setResult] = useState(null);
 
-  const verifyQr = async e => {
-    e.preventDefault();
+  const handleVerify = async () => {
     try {
-      const response = await axios.get(`${baseURL}/verify-qr/${claimID}`);
-      if (response.data.success) {
-        alert(`✅ QR code is valid for policy: ${response.data.policyID}`);
-        console.log(response.data);
-    } else {
-        alert('❌ QR code invalid or tampered!');
-    }
+      const res = await axios.get(`https://cubalah.eastasia.cloudapp.azure.com/verify-qr/${policyID}`);
+      setResult({ success: true, message: res.data.message });
     } catch (err) {
-        console.error(err);
-        alert('❌ Verification failed');
+      const msg = err.response?.data?.message || 'Verification failed';
+      setResult({ success: false, message: msg });
     }
   };
 
   return (
-    <div>
-      <h3>Verify QR</h3>
-        <button onClick={() => verifyQr('P123')}>Verify QR</button>
-      {error && <p>{error}</p>}
-    </div>
+    <Box sx={{ p: 4, maxWidth: 600, mx: 'auto' }}>
+      <Typography variant="h4" gutterBottom>
+        Verify QR Code
+      </Typography>
+
+      <TextField
+        label="Policy ID"
+        value={policyID}
+        onChange={(e) => setPolicyID(e.target.value)}
+        fullWidth
+        margin="normal"
+        required
+      />
+
+      <Button variant="contained" color="primary" onClick={handleVerify} sx={{ mt: 2 }}>
+        Verify
+      </Button>
+
+      {result && (
+        <Typography
+          variant="subtitle1"
+          color={result.success ? 'success.main' : 'error.main'}
+          sx={{ mt: 2 }}
+        >
+          {result.message}
+        </Typography>
+      )}
+    </Box>
   );
-}
+};
+
+export default VerifyQR;
 

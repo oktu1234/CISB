@@ -10,7 +10,7 @@ export default function ClaimForm() {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      await axios.post(`${baseURL}/policy`, form);
+      await axios.post(`${baseURL}/claim`, form);
       setMessage('✅ Claim submitted successfully');
     } catch (err) {
       setMessage(`❌ Error: ${err.response?.data?.error || err.message}`);

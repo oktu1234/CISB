@@ -25,9 +25,7 @@ export default function VerifyQR() {
   return (
     <div>
       <h3>Verify QR</h3>
-      <form onSubmit={handleSubmit}>
         <button onClick={() => verifyQr('P123')}>Verify QR</button>
-      </form>
       {error && <p>{error}</p>}
     </div>
   );

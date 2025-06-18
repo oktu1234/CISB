@@ -5,45 +5,46 @@ const InsuranceDashboard = () => {
   const [qrCodeUrl, setQrCodeUrl] = useState(null);
   const [verifyResult, setVerifyResult] = useState(null);
 
-  const API_URL = REACT_APP_API_BASE; // 🔑 Replace with your deployed API URL
+  const baseURL = process.env.REACT_APP_API_BASE; // 🔑 Replace with your deployed API URL
 
   const registerPolicy = async () => {
     const policyData = {
-      policyID: 'P123',
+      policyID: 'P666',
       farmerName: 'Alice',
       cropType: 'Rice',
       area: 100,
       sumInsured: 50000,
-      hash: 'abc123hash',
+      hash: '435353453445534',
       issueDate: '2025-06-18'
     };
 
     try {
-      const response = await axios.post(`${API_URL}/policy`, policyData);
-      if (response.data.success) {
-        alert('✅ Policy registered successfully!');
-        if (response.data.qrUrl) {
-          setQrCodeUrl(response.data.qrUrl);
-        }
-      } else {
+    const response = await axios.post(`${baseURL}/policy`, policyData);
+    if (response.data.success) {
+      alert('✅ Policy registered successfully!');
+      
+      // Now call generate-qr
+    const qrRes = await axios.post(`${baseURL}/generate-qr`, policyData);
+    setQrCodeUrl(qrRes.data.qrUrl);
+    } else {
         alert(`❌ Failed: ${response.data.message || 'Unknown error'}`);
-      }
+    }
     } catch (err) {
-      console.error(err);
-      alert('❌ Network or server error');
+        console.error(err);
+    alert('❌ Network or server error');
     }
   };
 
   const submitClaim = async () => {
     const claimData = {
-      claimID: 'C123',
-      policyID: 'P123',
+      claimID: 'C666',
+      policyID: 'P666',
       date: '2025-06-19',
       payout: 10000
     };
 
     try {
-      const response = await axios.post(`${API_URL}/claim`, claimData);
+      const response = await axios.post(`${baseURL}/claim`, claimData);
       if (response.data.success) {
         alert('✅ Claim submitted successfully!');
       } else {
@@ -56,9 +57,9 @@ const InsuranceDashboard = () => {
   };
 
   const verifyQr = async () => {
-    const policyID = 'P123';  // You can make this dynamic (input box)
+    const policyID = 'P666';  // You can make this dynamic (input box)
     try {
-      const response = await axios.get(`${API_URL}/verify/${policyID}`);
+      const response = await axios.get(`${baseURL}/verify/${policyID}`);
       if (response.data.success) {
         setVerifyResult(response.data);
         alert(`✅ QR code is valid for policy: ${response.data.policyID}`);

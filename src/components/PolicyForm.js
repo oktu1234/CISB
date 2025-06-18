@@ -1,43 +1,67 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-export default function PolicyForm() {
-  const [form, setForm] = useState({ policyID: '', farmerName: '', cropType: '', area: '', sumInsured: '', hash: '', issueDate: '' });
-  const [message, setMessage] = useState('');
-  const [qrCodeUrl] = useState(null);
-  const baseURL = process.env.REACT_APP_API_BASE;
-  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
+const API_URL = 'https://cubalah.eastasia.cloudapp.azure.com';  // Replace with your API URL
+
+const RegisterPolicy = () => {
+  const [formData, setFormData] = useState({
+    policyID: '',
+    farmerName: '',
+    cropType: '',
+    area: '',
+    sumInsured: '',
+    hash: '',
+    issueDate: ''
+  });
+
+  const [qrUrl, setQrUrl] = useState('');
+
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      await axios.post(`${baseURL}/policy`, form);
-      setMessage('✅ Policy submitted successfully');
+      const response = await axios.post(`${API_URL}/policy`, formData);
+      alert('Policy registered successfully!');
+      // Optionally: fetch QR code
+      const qrResponse = await axios.post(`${API_URL}/generate-qr`, formData);
+      setQrUrl(qrResponse.data.qrUrl);
     } catch (err) {
-      setMessage(`❌ Error: ${err.response?.data?.error || err.message}`);
+      console.error(err);
+      alert('Registration failed');
     }
   };
 
   return (
     <div>
-      <h3>Register New Policy</h3>
+      <h2>Register Policy</h2>
       <form onSubmit={handleSubmit}>
-        {['policyID', 'farmerName', 'cropType', 'area', 'sumInsured','hash', 'issueDate'].map(field => (
+        {Object.keys(formData).map(field => (
           <div key={field}>
-            <label>{field}</label>
-            <input type="text" name={field} value={form[field]} onChange={handleChange} required />
+            <label>{field}:</label>
+            <input
+              type="text"
+              name={field}
+              value={formData[field]}
+              onChange={handleChange}
+              required
+            />
           </div>
         ))}
         <button type="submit">Submit</button>
-        {qrCodeUrl && (
+      </form>
+      {qrUrl && (
         <div>
-          <h3>Policy QR Code</h3>
-          <img src={qrCodeUrl} alt="Policy QR Code" style={{ maxWidth: '300px' }} />
-          <a href={qrCodeUrl} download="policyQR.png">Download QR Code</a>
+          <h3>QR Code</h3>
+          <img src={qrUrl} alt="Policy QR Code" />
         </div>
       )}
-      </form>
-      {message && <p>{message}</p>}
     </div>
   );
-}
+};
+
+export default RegisterPolicy;
+
